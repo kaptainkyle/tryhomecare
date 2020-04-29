@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>THc Calc Demo</title>
+    <style type="text/css">
+      body {
+        font-size: 16px;
+        font-family: verdana;
+        padding: 20px;
+      }
+      h1 {font-size:20px;}
+      div {margin: 5px 0px;}
+      input {font-size: 16px;}
+      #master {
+        width:500px;
+        border-style:solid;
+        border-width:thin 1px;
+        border-color: #a3a;
+        padding:10px;
+      }
+      .sliderz {
+        -webkit-appearance: none;  /* Override default CSS styles */
+        appearance: none;
+        width: 50%; /* Full-width */
+        height: 5px; /* Specified height */
+        background: #a3a; /* Grey background */
+        outline: none; /* Remove outline */
+        opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+      }
+      .sliderz::-moz-range-thumb {
+        width: 25px; /* Set a specific slider handle width */
+        height: 25px; /* Slider handle height */
+        cursor: pointer; /* Cursor on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Try Homecare Demo Calculator</h1>
+    <div id="master">
+      <div id="thc">
+        Try Homecare's cut: %
+        <input id="thc1" type="number" min="0" max="20" value="10" onchange="getPricing()"></input>
+      </div>
+      <div id="agency">
+        Agency Cut: %
+        <input id="agency1" type="number" min="5" max="50" value="25" step="5" onchange="getPricing()"></input>
+      </div>
+
+      <div id="charge">
+        Minimum Charge: $
+        <input id="charge1" type="number" min="10" max="70" value="25" onchange="getPricing()"></input>
+      </div>
+      <div id="rate">
+        Hourly Rate for Zone: $
+        <input id="rate1" type="number" min="30" max="70" value="50" onchange="getPricing()"></input>
+      </div>
+      <div id="included">
+        Included Minutes for On-demand Visit:
+        <input id="included1" type="number" min="0" max="60" value="30" onchange="getPricing()"></input>
+      </div>
+      <div id="default">
+        Default Minutes for Service #1:
+        <input id="default1" type="number" value="30" min="0" max="60" step="5" onchange="printValue('default1','slider1'); printValue('default1','rangeValue1'); getPricing();"></input>
+      </div>
+      <div id="slider" style="text-align:center;">
+        <div><br />Adjust your time</div>
+        <input id="slider1" type="range" value="30" min="15" max="45" step="5" class="sliderz" onchange="printValue('slider1','rangeValue1'); getPricing();">
+          <div>
+            <div pseudo="-webkit-slider-runnable-track">
+              <div></div>
+            </div>
+          </div>
+        </input>
+      </div>
+      <div style="padding-left:240px;">
+        <input id="rangeValue1" type="text" style="border:0px;">
+          <div contenteditable="plaintext-only"></div>
+        </input>
+      </div>
+
+      Customer Cost: $<input id="customerCost" type="text" style="border:0px;">
+        <div contenteditable="plaintext-only"></div>
+      </input>
+      THc's Profit: $<input id="thcProfit" type="text" style="border:0px;">
+        <div contenteditable="plaintext-only"></div>
+      </input>
+      Agency's Profit: $<input id="agencyProfit" type="text" style="border:0px;">
+        <div contenteditable="plaintext-only"></div>
+      </input>
+      Care Giver's Profit: $<input id="giverProfit" type="text" style="border:0px;">
+        <div contenteditable="plaintext-only"></div>
+      </input>
+    </div>
+
+    <script>
+      function callBoth() {
+        printValue('slider1', 'rangeValue1');
+        getPricing();
+      }
+
+      function printValue(sliderID, targetID) {
+          var x = document.getElementById(targetID);
+          var y = document.getElementById(sliderID);
+          x.value = y.value;
+      }
+
+      function getPricing() {
+          var z = document.getElementById("customerCost");
+          var g = document.getElementById("thcProfit");
+          var h = document.getElementById("agencyProfit");
+          var i = document.getElementById("giverProfit");
+
+          var a = document.getElementById("rate1");
+          var b = document.getElementById("included1");
+          var c = document.getElementById("slider1");
+
+          var d = document.getElementById("charge1");
+          var e = document.getElementById("thc1");
+          var f = document.getElementById("agency1");
+
+          var t = 0;
+          if (b.value < c.value) {
+            //if time aloted to te the servicer is greater than the bucket
+            t = (c.value - b.value)/60;
+          }
+          z.value = parseInt(d.value) + Math.round(a.value * t);
+          g.value = (z.value * Math.round(e.value)) / 100;
+
+          h.value = (z.value - g.value) * (f.value / 100);
+          i.value = (z.value - g.value - h.value);
+
+      }
+
+
+
+      window.onload = function() {callBoth();}
+
+  </script>
+  </body>
+</html>
